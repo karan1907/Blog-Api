@@ -1,14 +1,16 @@
 const express = require("express");
 const dotenv = require("dotenv");
 
+// Load Routes
+const Blogs = require("./routes/blogs");
+
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.json({ msg: "Hello World" });
-});
+// Mount Routes
+app.use("/api/v1/blogs", Blogs);
 
 const PORT = process.env.PORT || 3000;
 
