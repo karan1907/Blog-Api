@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const blogSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: "Please Give A Unique Name To Your Blog",
+    required: [true, "Please Provide a unique name for your blog!"],
     unique: true,
     trim: true,
     maxlength: [50, "Name must be under 50 Characters"]
@@ -13,7 +13,7 @@ const blogSchema = new mongoose.Schema({
   },
   article: {
     type: String,
-    required: true,
+    required: [true, "Blog Article is required for submission!"],
     trim: true,
     maxlength: [1000, "Description must be under 1000 Characters"]
   },
