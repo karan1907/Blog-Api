@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const blogSchema = new mongoose.Schema({
   name: {
@@ -21,6 +22,13 @@ const blogSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   }
+});
+
+// Pre Save Hook to create the slug for blog
+
+blogSchema.pre("save", function(next) {
+  this.slug = slugify(this.name);
+  next();
 });
 
 module.exports = new mongoose.model("Blog", blogSchema);
