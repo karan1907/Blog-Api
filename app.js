@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 
 // Load Routes
 const Blogs = require("./routes/blogs");
+const Auth = require("./routes/auth");
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount Routes
 app.use("/api/v1/blogs", Blogs);
+app.use("/api/v1/auth", Auth);
 
 app.use(errorHandler);
 
