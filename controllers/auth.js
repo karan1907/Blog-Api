@@ -1,5 +1,6 @@
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
+const sendEmail = require("../utils/sendEmail");
 const User = require("../models/User");
 
 exports.register = asyncHandler(async (req, res, next) => {
@@ -79,10 +80,29 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   await user.save({ validateBeforeSave: false });
 
-  res.status(200).json({
-    success: true,
-    data: user
-  });
+  //Create Reset Url
+  const resetURL = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/resetpassword/${resetToken}`;
+
+  //Message to Send
+  const message = `You or someone else request for reset password request. Please
+  go to the given url to confirm \n\n${resetURL}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "Password Reset",
+      message
+    });
+    res.status(200).json({ success: true, data: "Email Sent" });
+  } catch (err) {
+    (user.passwordResetToken = undefined),
+      (user.passwordResetTokenExpire = undefined),
+      await user.save({ validateBeforeSave: false });
+
+    return next(new ErrorResponse("Something went wrong", 401));
+  }
 });
 
 //Grant Access to specific roles
