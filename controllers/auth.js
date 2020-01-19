@@ -59,3 +59,14 @@ exports.getMe = asyncHandler(async (req, res, next) => {
     data: user
   });
 });
+
+//Grant Access to specific roles
+
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new ErrorResponse("Not Authorized", 401));
+    }
+    next();
+  };
+};

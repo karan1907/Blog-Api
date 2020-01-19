@@ -20,6 +20,11 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
+  role: {
+    type: String,
+    enum: ["user"],
+    default: "user"
+  },
   passwordResetToken: String,
   passwordResetTokenExpire: String,
   createdAt: {
