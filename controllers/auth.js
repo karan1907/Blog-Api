@@ -60,6 +60,31 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
+//Forgot Password Token Generation
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  //Check if user is registered
+  if (!user) {
+    return next(
+      new ErrorResponse(
+        `User with E-Mail : ${req.body.email} is not registered with us!`,
+        404
+      )
+    );
+  }
+
+  //Generate Reset Token
+  const resetToken = user.getResetPasswordToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    data: user
+  });
+});
+
 //Grant Access to specific roles
 
 exports.authorize = (...roles) => {
