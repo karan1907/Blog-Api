@@ -161,14 +161,3 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
   sendTokenResponse(user, 200, res);
 });
-
-//Grant Access to specific roles
-
-exports.authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(new ErrorResponse("Not Authorized", 401));
-    }
-    next();
-  };
-};
