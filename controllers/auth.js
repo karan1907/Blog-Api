@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const sendEmail = require("../utils/sendEmail");
@@ -83,7 +84,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   //Create Reset Url
   const resetURL = `${req.protocol}://${req.get(
     "host"
-  )}/api/v1/resetpassword/${resetToken}`;
+  )}/api/v1/auth/resetpassword/${resetToken}`;
 
   //Message to Send
   const message = `You or someone else request for reset password request. Please
@@ -103,6 +104,33 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     return next(new ErrorResponse("Something went wrong", 401));
   }
+});
+
+// Reset Passowrd
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  //Get hashed token
+  const passwordResetToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken,
+    passwordResetTokenExpire: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return next(new ErrorResponse("Expired Token", 400));
+  }
+
+  // Set Password
+  user.password = req.body.password;
+  (user.passwordResetToken = undefined),
+    (user.passwordResetTokenExpire = undefined);
+
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
 });
 
 //Grant Access to specific roles
