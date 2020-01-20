@@ -147,6 +147,21 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
   res.status(200).json({ sucess: true, data: user });
 });
 
+// Update Password of logged in User
+exports.updatePassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  //Check Current Password
+  if (!(await user.matchPassword(req.body.currentPassword))) {
+    return next(new ErrorResponse("Invalid Password", 400));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
+});
+
 //Grant Access to specific roles
 
 exports.authorize = (...roles) => {
