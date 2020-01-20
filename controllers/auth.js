@@ -133,6 +133,20 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
+// Update Details of Logged In User
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+  const fields = {
+    name: req.body.name,
+    email: req.body.email
+  };
+  const user = await User.findByIdAndUpdate(req.user.id, fields, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({ sucess: true, data: user });
+});
+
 //Grant Access to specific roles
 
 exports.authorize = (...roles) => {
