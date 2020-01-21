@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const colors = require("colors");
 const cookieParser = require("cookie-parser");
+const mongoSanitize = require("express-mongo-sanitize");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
 
@@ -31,6 +32,9 @@ connectDB();
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+// Prevent NOSQL Injection
+app.use(mongoSanitize());
 
 // Mount Routes
 app.use("/api/v1/blogs", Blogs);
