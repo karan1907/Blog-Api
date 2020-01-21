@@ -7,9 +7,15 @@ const {
   deleteBlog
 } = require("../controllers/blogs");
 
+//Include other resource routers
+const commentRouter = require("./comment");
+
 const { protect } = require("../middleware/auth");
 
 const router = express.Router();
+
+//Re-route into other resource routes
+router.use("/:blogId/comments", commentRouter);
 
 router
   .route("/")

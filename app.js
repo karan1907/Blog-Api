@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const Blogs = require("./routes/blogs");
 const Auth = require("./routes/auth");
 const User = require("./routes/user");
+const Comment = require("./routes/comment");
 
 // Load env variables
 dotenv.config({ path: "./config/config.env" });
@@ -35,6 +36,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/blogs", Blogs);
 app.use("/api/v1/auth", Auth);
 app.use("/api/v1/user", User);
+app.use("/api/v1/comments", Comment);
 
 app.use(errorHandler);
 
