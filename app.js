@@ -9,6 +9,7 @@ const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const cors = require("cors");
+const path = require("path");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
 
@@ -31,6 +32,9 @@ app.use(cookieParser());
 
 // Connect to DB
 connectDB();
+
+//Serving static files
+app.use(express.static(path.join(__dirname, "public")));
 
 // Logger middleware
 
