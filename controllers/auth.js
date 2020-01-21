@@ -62,6 +62,21 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
+//Logout User
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "name", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      msg: "Logged out SuccessFully!"
+    }
+  });
+});
+
 //Forgot Password Token Generation
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
