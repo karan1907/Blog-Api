@@ -7,7 +7,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
-var hpp = require("hpp");
+const hpp = require("hpp");
+const cors = require("cors");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
 
@@ -57,6 +58,9 @@ const limiter = rateLimit({
 
 //  apply to all requests
 app.use(limiter);
+
+// CROSS ORIGIN Request
+app.use(cors());
 
 // Mount Routes
 app.use("/api/v1/blogs", Blogs);
